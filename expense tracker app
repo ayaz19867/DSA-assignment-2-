@@ -1,0 +1,218 @@
+#include <iostream>
+using namespace std;
+//the basic node class 
+class node
+{
+public:
+node* next;
+
+node()
+{
+next=NULL;
+}
+virtual void display()=0;
+};
+//this class hold node of int data type 
+class intnode:public node  {
+public:
+ int data ;
+    intnode(int data) {
+        this->data = data;
+        next = NULL;
+    }
+void display()
+{
+          cout<<"    "<<data<<"      ";
+}
+};
+//this class hold node of string data type 
+class stringnode:public node {
+public:
+    
+    string data ;
+    stringnode(string data) {
+        this->data = data;
+        next = NULL;
+    }
+    void   display ()
+    {
+          cout<<"    "<<data<<"     ";
+    }
+};
+//this node hold date 
+class datenode :public node 
+{
+    public:
+    int month;
+    int day;
+    int year;
+    datenode(int day,int month ,int year)
+    {
+     this->day=day;
+     this->month=month;
+     this->year=year;
+
+    }
+    void display()
+    {
+        cout<<"      ("<<day<<"-"<<month<<"-"<<year<<")         ";
+    }
+};
+//class linklist which will create a list of expense detail 
+class linklist {
+public:
+    node* head;
+
+    linklist() {
+        head = NULL;
+    }
+
+    void pushfrontint(int data) {
+        intnode* newnode=new intnode(data);
+        if (head==NULL)
+        {
+          head=newnode;
+        }
+        else{
+          newnode->next=head;
+          head=newnode;
+        }
+    }
+    void pushfrontstring(string data) {
+        stringnode* newnode=new stringnode(data);
+        if (head==NULL)
+        {
+          head=newnode;
+        }
+        else{
+          newnode->next=head;
+          head=newnode;
+        }
+    }
+    void pushfrontdate(int day,int month ,int year) {
+    datenode* newnode=new datenode(day,month,year);
+        if (head==NULL)
+        {
+          head=newnode;
+        }
+        else{
+          newnode->next=head;
+          head=newnode;
+        }
+    }
+
+    
+};
+//masternode which will hold the head of single linklist
+class masternode {
+public:
+    node* head;
+    masternode* next1;
+
+    masternode(node* head) {
+        this->head = head;
+        next1 = NULL;
+    }
+};
+//this class make a list of head of all the linklists
+class masterlist {
+public:
+    masternode* head1;
+
+    masterlist() {
+        head1 = NULL;
+    }
+
+    void pushfront(node* head) {
+        masternode* newnode = new masternode(head);
+        newnode->next1 = head1;
+        head1 = newnode;
+    }
+    void display()
+    {
+          masternode* temp=head1;
+
+          while (temp!=NULL)
+          {    node* temp1=temp->head;
+            
+                  while (temp1 != NULL) {
+           temp1->display();
+           cout<<"->";
+            temp1 = temp1->next;
+        }
+        cout << "NULL" << endl;
+                    temp=temp->next1;
+          }
+
+    }
+};
+
+
+int main() {
+      int option;
+      linklist l1[100];
+      masterlist m1;
+      int expenses;
+      int id,amount;
+      string name;
+      int day,month,year;
+      int totalexpenses=0;
+id  = rand() % 500;
+p:
+cout<<endl<<"********  MAIN MENU  **********"<<endl<<endl;
+    cout<<"1.ADD AN EXPENSE "<<endl;
+    cout<<"2.VIEW ALL EXPENSES"<<endl;
+    cout<<"3.GET A REPORT "<<endl;
+    cout<<"4.EXIT "<<endl;
+    cout<<"select the option :";
+    
+    cin>>option;
+    switch (option)
+    {
+    case 1:
+
+    cout<<endl<<"**********INPUT DETAILS*********"<<endl<<endl;
+    cout<<"how many expenses do you want to enter :   ";
+    cin>>expenses;
+    
+    for (int i=0;i<expenses;i++)
+    {
+   cout<<"enter the date in format....day/month/year :  ";
+   cin>>day>>month>>year;
+    l1[i].pushfrontdate(day,month,year);
+     cout<<"enter the amount of expense :  ";
+    cin>>amount;
+    totalexpenses+=amount;
+    l1[i].pushfrontint(amount);
+
+
+     cout<<"enter the name :   ";
+     cin>>name;
+    l1[i].pushfrontstring(name);
+    l1[i].pushfrontint(id);
+    id++;
+    m1.pushfront(l1[i].head);
+    }
+
+    goto p;
+          break;
+    case 2:
+    cout<<endl;
+    cout<<"*********ALL EXPENSE DATA*********"<<endl<<endl;
+  m1.display();  
+  goto p;  
+ break;
+  case 3:
+  cout<<endl;
+  cout<<"************REPORT************"<<endl<<endl;
+  cout<<"NUMBER OF EXPENSES  :    "<<expenses<<endl;
+cout<<"TOTAL EXPENSE AMOUNT  :      "<<totalexpenses<<endl;
+goto p;
+  break;
+  case 4:
+  return 0;
+ default:
+ break;
+    }
+
+}
